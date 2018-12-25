@@ -1,10 +1,9 @@
 package writeas
 
 import (
-	"testing"
-
 	"fmt"
 	"strings"
+	"testing"
 )
 
 func TestCreatePost(t *testing.T) {

@@ -1,8 +1,6 @@
 package writeas
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestAuthentication(t *testing.T) {
 	dwac := NewDevClient()
