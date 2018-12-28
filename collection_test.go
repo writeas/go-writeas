@@ -71,7 +71,8 @@ func TestCreateAndDeleteCollection(t *testing.T) {
 		t.Fatalf("Unable to create collection %q: %v", alias, err)
 	}
 
-	if err := wac.DeleteCollection(c.Alias); err != nil {
+	p := &DeleteCollectionParams{Alias: c.Alias}
+	if err := wac.DeleteCollection(p); err != nil {
 		t.Fatalf("Unable to delete collection %q: %v", alias, err)
 	}
 }
@@ -81,7 +82,8 @@ func TestDeleteCollectionUnauthenticated(t *testing.T) {
 
 	now := time.Now().Unix()
 	alias := fmt.Sprintf("test-collection-does-not-exist-%v", now)
-	err := wac.DeleteCollection(alias)
+	p := &DeleteCollectionParams{Alias: alias}
+	err := wac.DeleteCollection(p)
 	if err == nil {
 		t.Fatalf("Should not be able to delete collection %q unauthenticated.", alias)
 	}
