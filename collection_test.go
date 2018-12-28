@@ -2,7 +2,9 @@ package writeas
 
 import (
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestGetCollection(t *testing.T) {
@@ -48,6 +50,44 @@ func TestGetUserCollections(t *testing.T) {
 		if len(*res) == 0 {
 			t.Errorf("No collections returned!")
 		}
+	}
+}
+
+func TestCreateAndDeleteCollection(t *testing.T) {
+	wac := NewDevClient()
+	_, err := wac.LogIn("demo", "demo")
+	if err != nil {
+		t.Fatalf("Unable to log in: %v", err)
+	}
+	defer wac.LogOut()
+
+	now := time.Now().Unix()
+	alias := fmt.Sprintf("test-collection-%v", now)
+	c, err := wac.CreateCollection(&CollectionParams{
+		Alias: alias,
+		Title: fmt.Sprintf("Test Collection %v", now),
+	})
+	if err != nil {
+		t.Fatalf("Unable to create collection %q: %v", alias, err)
+	}
+
+	if err := wac.DeleteCollection(c.Alias); err != nil {
+		t.Fatalf("Unable to delete collection %q: %v", alias, err)
+	}
+}
+
+func TestDeleteCollectionUnauthenticated(t *testing.T) {
+	wac := NewDevClient()
+
+	now := time.Now().Unix()
+	alias := fmt.Sprintf("test-collection-does-not-exist-%v", now)
+	err := wac.DeleteCollection(alias)
+	if err == nil {
+		t.Fatalf("Should not be able to delete collection %q unauthenticated.", alias)
+	}
+
+	if !strings.Contains(err.Error(), "Not authenticated") {
+		t.Fatalf("Error message should be more informative: %v", err)
 	}
 }
 

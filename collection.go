@@ -135,3 +135,27 @@ func (c *Client) GetUserCollections() (*[]Collection, error) {
 	}
 	return colls, nil
 }
+
+// DeleteCollection permanently deletes a collection and makes any posts on it
+// anonymous.
+//
+// See https://developers.write.as/docs/api/#delete-a-collection.
+func (c *Client) DeleteCollection(alias string) error {
+	endpoint := "/collections/" + alias
+	env, err := c.delete(endpoint, nil /* data */)
+	if err != nil {
+		return err
+	}
+
+	status := env.Code
+	switch status {
+	case http.StatusNoContent:
+		return nil
+	case http.StatusUnauthorized:
+		return fmt.Errorf("Not authenticated.")
+	case http.StatusBadRequest:
+		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	default:
+		return fmt.Errorf("Problem deleting collection: %d. %s\n", status, env.ErrorMessage)
+	}
+}
