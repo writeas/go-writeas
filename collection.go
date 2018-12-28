@@ -35,6 +35,35 @@ type (
 	DeleteCollectionParams struct {
 		Alias string `json:"-"`
 	}
+
+	// CollectPostParams holds the parameters for moving posts to a collection.
+	CollectPostParams struct {
+		// Alias of the collection.
+		Alias string `json:"-"`
+
+		// Posts to move to this collection.
+		Posts []*CollectPost
+	}
+
+	// CollectPost is a post being moved to a collection.
+	CollectPost struct {
+		// ID of the post.
+		ID string `json:"id,omitempty"`
+
+		// The post's modify token.
+		//
+		// This is required if the post does not belong to the user making
+		// this request.
+		Token string `json:"token,omitempty"`
+	}
+
+	// CollectPostResult holds the result of moving a single post to a
+	// collection.
+	CollectPostResult struct {
+		Code         int    `json:"code,omitempty"`
+		ErrorMessage string `json:"error_msg,omitempty"`
+		Post         *Post  `json:"post,omitempty"`
+	}
 )
 
 // CreateCollection creates a new collection, returning a user-friendly error
@@ -163,5 +192,30 @@ func (c *Client) DeleteCollection(p *DeleteCollectionParams) error {
 		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
 	default:
 		return fmt.Errorf("Problem deleting collection: %d. %s\n", status, env.ErrorMessage)
+	}
+}
+
+// CollectPosts adds a group of posts to a collection.
+//
+// See https://developers.write.as/docs/api/#move-a-post-to-a-collection.
+func (c *Client) CollectPosts(sp *CollectPostParams) ([]*CollectPostResult, error) {
+	endpoint := "/collections/" + sp.Alias + "/collect"
+
+	var p []*CollectPostResult
+	env, err := c.post(endpoint, sp.Posts, &p)
+	if err != nil {
+		return nil, err
+	}
+
+	status := env.Code
+	switch {
+	case status == http.StatusOK:
+		return p, nil
+	case c.isNotLoggedIn(status):
+		return nil, fmt.Errorf("Not authenticated.")
+	case status == http.StatusBadRequest:
+		return nil, fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	default:
+		return nil, fmt.Errorf("Problem claiming post: %d. %s\n", status, env.ErrorMessage)
 	}
 }
