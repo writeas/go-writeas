@@ -116,6 +116,7 @@ func (c *Client) SetBaseUrl(baseUrl string) {
 	log.Println("url set to", c.baseURL)
 }
 
+// BaseUrl returns the set baseUrl
 func (c *Client) BaseUrl() string {
 	return c.baseURL
 }
