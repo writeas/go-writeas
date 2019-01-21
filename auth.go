@@ -27,6 +27,8 @@ func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 		return nil, fmt.Errorf("Wrong data returned from API.")
 	}
 
+	u.BaseURL = c.BaseUrl()
+
 	status := env.Code
 	if status != http.StatusOK {
 		if status == http.StatusBadRequest {

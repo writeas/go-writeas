@@ -3,13 +3,15 @@ package writeas
 
 import (
 	"bytes"
-	"code.as/core/socks"
 	"encoding/json"
 	"fmt"
-	"github.com/writeas/impart"
 	"io"
+	"log"
 	"net/http"
 	"time"
+
+	"code.as/core/socks"
+	"github.com/writeas/impart"
 )
 
 const (
@@ -105,6 +107,17 @@ func (c *Client) SetToken(token string) {
 // Token returns the user token currently set to the Client.
 func (c *Client) Token() string {
 	return c.token
+}
+
+// SetBaseUrl sets the baseUrl for all future Client requests
+func (c *Client) SetBaseUrl(baseUrl string) {
+	c.baseURL = baseUrl
+
+	log.Println("url set to", c.baseURL)
+}
+
+func (c *Client) BaseUrl() string {
+	return c.baseURL
 }
 
 func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {

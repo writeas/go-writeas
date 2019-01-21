@@ -8,6 +8,7 @@ type (
 	// AuthUser represents a just-authenticated user. It contains information
 	// that'll only be returned once (now) per user session.
 	AuthUser struct {
+		BaseURL     string `json:"baseUrl,omitempty"`
 		AccessToken string `json:"access_token,omitempty"`
 		Password    string `json:"password,omitempty"`
 		User        *User  `json:"user"`
