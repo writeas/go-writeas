@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
@@ -111,9 +110,9 @@ func (c *Client) Token() string {
 
 // SetBaseUrl sets the baseUrl for all future Client requests
 func (c *Client) SetBaseUrl(baseUrl string) {
-	c.baseURL = baseUrl
-
-	log.Println("url set to", c.baseURL)
+	if baseUrl != "" {
+		c.baseURL = baseUrl
+	}
 }
 
 // BaseUrl returns the set baseUrl
