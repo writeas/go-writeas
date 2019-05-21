@@ -3,13 +3,14 @@ package writeas
 
 import (
 	"bytes"
-	"code.as/core/socks"
 	"encoding/json"
 	"fmt"
-	"github.com/writeas/impart"
 	"io"
 	"net/http"
 	"time"
+
+	"code.as/core/socks"
+	"github.com/writeas/impart"
 )
 
 const (

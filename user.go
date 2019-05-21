@@ -1,8 +1,6 @@
 package writeas
 
-import (
-	"time"
-)
+import "time"
 
 type (
 	// AuthUser represents a just-authenticated user. It contains information
