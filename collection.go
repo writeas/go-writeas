@@ -29,12 +29,6 @@ type (
 		Alias string `json:"alias"`
 		Title string `json:"title"`
 	}
-
-	// DeleteCollectionParams holds the parameters required to delete a
-	// collection.
-	DeleteCollectionParams struct {
-		Alias string `json:"-"`
-	}
 )
 
 // CreateCollection creates a new collection, returning a user-friendly error
@@ -146,8 +140,8 @@ func (c *Client) GetUserCollections() (*[]Collection, error) {
 // anonymous.
 //
 // See https://developers.write.as/docs/api/#delete-a-collection.
-func (c *Client) DeleteCollection(p *DeleteCollectionParams) error {
-	endpoint := "/collections/" + p.Alias
+func (c *Client) DeleteCollection(alias string) error {
+	endpoint := "/collections/" + alias
 	env, err := c.delete(endpoint, nil /* data */)
 	if err != nil {
 		return err
