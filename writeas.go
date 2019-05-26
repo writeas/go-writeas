@@ -191,7 +191,7 @@ func (c *Client) prepareRequest(r *http.Request) {
 	if ua == "" {
 		ua = "go-writeas v" + Version
 	}
-	r.Header.Add("User-Agent", ua)
+	r.Header.Set("User-Agent", ua)
 	r.Header.Add("Content-Type", "application/json")
 	if c.token != "" {
 		r.Header.Add("Authorization", "Token "+c.token)
