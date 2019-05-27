@@ -15,7 +15,7 @@ func TestGetCollection(t *testing.T) {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 	} else {
 		t.Logf("Collection: %+v", res)
-		if res.Title != "write.as" {
+		if res.Title != "write.as blog" {
 			t.Errorf("Unexpected fetch results: %+v\n", res)
 		}
 	}
@@ -106,15 +106,4 @@ func TestDeleteCollectionUnauthenticated(t *testing.T) {
 	if !strings.Contains(err.Error(), "Not authenticated") {
 		t.Fatalf("Error message should be more informative: %v", err)
 	}
-}
-
-func ExampleClient_GetCollection() {
-	c := NewClient()
-	coll, err := c.GetCollection("blog")
-	if err != nil {
-		fmt.Printf("%v", err)
-		return
-	}
-	fmt.Printf("%s", coll.Title)
-	// Output: write.as
 }
