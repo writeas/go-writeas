@@ -113,6 +113,30 @@ func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
 	}
 }
 
+// GetCollectionPost retrieves a post from a collection
+// and any error (in user-friendly form) that occurs). See
+// https://developers.write.as/docs/api/#retrieve-a-collection-post
+func (c *Client) GetCollectionPost(alias, slug string) (*Post, error) {
+	post := Post{}
+
+	env, err := c.get(fmt.Sprintf("/collections/%s/posts/%s", alias, slug), &post)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := env.Data.(*Post); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+
+	if env.Code == http.StatusOK {
+		return &post, nil
+	} else if env.Code == http.StatusNotFound {
+		return nil, fmt.Errorf("Post %s not found in collection %s", slug, alias)
+	}
+
+	return nil, fmt.Errorf("Problem getting post %s from collection %s: %d. %v\n", slug, alias, env.Code, err)
+}
+
 // GetUserCollections retrieves the authenticated user's collections.
 // See https://developers.write.as/docs/api/#retrieve-user-39-s-collections
 func (c *Client) GetUserCollections() (*[]Collection, error) {

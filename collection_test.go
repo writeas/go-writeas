@@ -34,6 +34,23 @@ func TestGetCollectionPosts(t *testing.T) {
 	}
 }
 
+func TestGetCollectionPost(t *testing.T) {
+	wac := NewClient()
+
+	res, err := wac.GetCollectionPost("blog", "extending-write-as")
+	if err != nil {
+		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
+	}
+
+	if res == nil {
+		t.Errorf("No post returned!")
+	}
+
+	if len(res.Content) == 0 {
+		t.Errorf("Post content is empty!")
+	}
+}
+
 func TestGetUserCollections(t *testing.T) {
 	wac := NewDevClient()
 	_, err := wac.LogIn("demo", "demo")
