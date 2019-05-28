@@ -8,47 +8,45 @@ import (
 )
 
 func TestGetCollection(t *testing.T) {
-	wac := NewClient()
+	dwac := NewDevClient()
 
-	res, err := wac.GetCollection("blog")
+	res, err := dwac.GetCollection("tester")
 	if err != nil {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
-	} else {
-		t.Logf("Collection: %+v", res)
-		if res.Title != "write.as blog" {
-			t.Errorf("Unexpected fetch results: %+v\n", res)
-		}
+	}
+	if res == nil {
+		t.Error("Expected collection to not be nil")
 	}
 }
 
 func TestGetCollectionPosts(t *testing.T) {
-	wac := NewClient()
+	dwac := NewDevClient()
+	posts := []Post{}
 
-	res, err := wac.GetCollectionPosts("blog")
-	if err != nil {
-		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
-	} else {
-		if len(*res) == 0 {
-			t.Errorf("No posts returned!")
+	t.Run("Get all posts in collection", func(t *testing.T) {
+		res, err := dwac.GetCollectionPosts("tester")
+		if err != nil {
+			t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 		}
-	}
-}
+		if len(*res) == 0 {
+			t.Error("Expected at least on post in collection")
+		}
+		posts = *res
+	})
+	t.Run("Get one post from collection", func(t *testing.T) {
+		res, err := dwac.GetCollectionPost("tester", posts[0].Slug)
+		if err != nil {
+			t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
+		}
 
-func TestGetCollectionPost(t *testing.T) {
-	wac := NewClient()
+		if res == nil {
+			t.Errorf("No post returned!")
+		}
 
-	res, err := wac.GetCollectionPost("blog", "extending-write-as")
-	if err != nil {
-		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
-	}
-
-	if res == nil {
-		t.Errorf("No post returned!")
-	}
-
-	if len(res.Content) == 0 {
-		t.Errorf("Post content is empty!")
-	}
+		if len(res.Content) == 0 {
+			t.Errorf("Post content is empty!")
+		}
+	})
 }
 
 func TestGetUserCollections(t *testing.T) {
