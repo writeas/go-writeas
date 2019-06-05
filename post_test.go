@@ -7,7 +7,7 @@ import (
 
 func TestPostRoundTrip(t *testing.T) {
 	var id, token string
-	dwac := NewClient()
+	dwac := NewClient(devAPIURL)
 	t.Run("Create post", func(t *testing.T) {
 		p, err := dwac.CreatePost(&PostParams{
 			Title:   "Title!",
@@ -53,7 +53,7 @@ func TestPostRoundTrip(t *testing.T) {
 }
 
 func TestPinUnPin(t *testing.T) {
-	dwac := NewDevClient()
+	dwac := NewClient(devAPIURL)
 	_, err := dwac.LogIn("demo", "demo")
 	if err != nil {
 		t.Fatalf("Unable to log in: %v", err)
@@ -75,7 +75,7 @@ func TestPinUnPin(t *testing.T) {
 }
 
 func ExampleClient_CreatePost() {
-	dwac := NewDevClient()
+	dwac := NewClient(devAPIURL)
 
 	// Publish a post
 	p, err := dwac.CreatePost(&PostParams{

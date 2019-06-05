@@ -3,7 +3,7 @@ package writeas
 import "testing"
 
 func TestAuthentication(t *testing.T) {
-	dwac := NewDevClient()
+	dwac := NewClient(devAPIURL)
 
 	// Log in
 	_, err := dwac.LogIn("demo", "demo")

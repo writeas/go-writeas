@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetCollection(t *testing.T) {
-	dwac := NewDevClient()
+	dwac := NewClient(devAPIURL)
 
 	res, err := dwac.GetCollection("tester")
 	if err != nil {
@@ -20,7 +20,7 @@ func TestGetCollection(t *testing.T) {
 }
 
 func TestGetCollectionPosts(t *testing.T) {
-	dwac := NewDevClient()
+	dwac := NewClient(devAPIURL)
 	posts := []Post{}
 
 	t.Run("Get all posts in collection", func(t *testing.T) {
@@ -50,7 +50,7 @@ func TestGetCollectionPosts(t *testing.T) {
 }
 
 func TestGetUserCollections(t *testing.T) {
-	wac := NewDevClient()
+	wac := NewClient(devAPIURL)
 	_, err := wac.LogIn("demo", "demo")
 	if err != nil {
 		t.Fatalf("Unable to log in: %v", err)
@@ -69,7 +69,7 @@ func TestGetUserCollections(t *testing.T) {
 }
 
 func TestCreateAndDeleteCollection(t *testing.T) {
-	wac := NewDevClient()
+	wac := NewClient(devAPIURL)
 	_, err := wac.LogIn("demo", "demo")
 	if err != nil {
 		t.Fatalf("Unable to log in: %v", err)
@@ -92,7 +92,7 @@ func TestCreateAndDeleteCollection(t *testing.T) {
 }
 
 func TestDeleteCollectionUnauthenticated(t *testing.T) {
-	wac := NewDevClient()
+	wac := NewClient(devAPIURL)
 
 	now := time.Now().Unix()
 	alias := fmt.Sprintf("test-collection-does-not-exist-%v", now)
