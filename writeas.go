@@ -44,21 +44,15 @@ const defaultHTTPTimeout = 10 * time.Second
 //
 //     c := writeas.NewClient()
 //     c.SetToken("00000000-0000-0000-0000-000000000000")
-func NewClient(baseURL string) *Client {
-	if baseURL == "" {
-		baseURL = apiURL
-	}
-	return NewClientWith(Config{URL: baseURL})
+func NewClient() *Client {
+	return NewClientWith(Config{URL: apiURL})
 }
 
 // NewTorClient creates a new API client for communicating with the Write.as
 // Tor hidden service, using the given port to connect to the local SOCKS
 // proxy.
-func NewTorClient(baseURL string, port int) *Client {
-	if baseURL == "" {
-		baseURL = torAPIURL
-	}
-	return NewClientWith(Config{URL: baseURL, TorPort: port})
+func NewTorClient(port int) *Client {
+	return NewClientWith(Config{URL: torAPIURL, TorPort: port})
 }
 
 // Config configures a Write.as client.
