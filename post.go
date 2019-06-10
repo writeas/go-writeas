@@ -31,7 +31,7 @@ type (
 
 	// OwnedPostParams are, together, fields only the original post author knows.
 	OwnedPostParams struct {
-		ID    string `json:"-"`
+		ID    string `json:"id"`
 		Token string `json:"token,omitempty"`
 	}
 
