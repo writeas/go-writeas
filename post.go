@@ -212,7 +212,7 @@ func (c *Client) deletePost(collection, identifier, token string) error {
 // https://developer.write.as/docs/api/#claim-posts.
 func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	p := &[]ClaimPostResult{}
-	env, err := c.put("/posts/claim", sp, p)
+	env, err := c.post("/posts/claim", sp, p)
 	if err != nil {
 		return nil, err
 	}
