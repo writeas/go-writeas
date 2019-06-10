@@ -1,4 +1,4 @@
-module github.com/writeas/go-writeas
+module github.com/writeas/go-writeas/v2
 
 go 1.9
 

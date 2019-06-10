@@ -1,13 +1,17 @@
 # go-writeas
 
-[![godoc](https://godoc.org/go.code.as/writeas.v1?status.svg)](https://godoc.org/go.code.as/writeas.v1)
+[![godoc](https://godoc.org/go.code.as/writeas.v2?status.svg)](https://godoc.org/go.code.as/writeas.v2)
 
 Official Write.as Go client library.
 
 ## Installation
 
+**Warning**: the `v2` branch is under heavy development and its API will change without notice.
+
+For a stable API, use `go.code.as/writeas.v1` and upgrade to `v2` once everything is merged into `master`.
+
 ```bash
-go get go.code.as/writeas.v1
+go get go.code.as/writeas.v2
 ```
 
 ## Documentation
@@ -17,7 +21,7 @@ See all functionality and usages in the [API documentation](https://developer.wr
 ### Example usage
 
 ```go
-import "go.code.as/writeas.v1"
+import "go.code.as/writeas.v2"
 
 func main() {
 	// Create the client
@@ -37,11 +41,7 @@ func main() {
 	token := p.Token
 
 	// Update a published post
-	p, err = c.UpdatePost(&writeas.PostParams{
-		OwnedPostParams: writeas.OwnedPostParams{
-			ID:    p.ID,
-			Token: token,
-		},
+	p, err = c.UpdatePost(p.ID, token, &writeas.PostParams{
 		Content: "Now it's been updated!",
 	})
 	if err != nil {
@@ -55,12 +55,7 @@ func main() {
 	}
 
 	// Delete a post
-	err = c.DeletePost(&writeas.PostParams{
-		OwnedPostParams: writeas.OwnedPostParams{
-			ID:    p.ID,
-			Token: token,
-		},
-	})
+	err = c.DeletePost(p.ID, token)
 }
 ```
 
@@ -68,7 +63,7 @@ func main() {
 
 The library covers our usage, but might not be comprehensive of the API. So we always welcome contributions and improvements from the community. Before sending pull requests, make sure you've done the following:
 
-* Run `go fmt` on all updated .go files.
+* Run `goimports` on all updated .go files.
 * Document all exported structs and funcs.
 
 ## License

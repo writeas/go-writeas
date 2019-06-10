@@ -26,8 +26,9 @@ type (
 
 	// CollectionParams holds values for creating a collection.
 	CollectionParams struct {
-		Alias string `json:"alias"`
-		Title string `json:"title"`
+		Alias       string `json:"alias"`
+		Title       string `json:"title"`
+		Description string `json:"description,omitempty"`
 	}
 )
 
@@ -112,6 +113,30 @@ func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
 	}
 }
 
+// GetCollectionPost retrieves a post from a collection
+// and any error (in user-friendly form) that occurs). See
+// https://developers.write.as/docs/api/#retrieve-a-collection-post
+func (c *Client) GetCollectionPost(alias, slug string) (*Post, error) {
+	post := Post{}
+
+	env, err := c.get(fmt.Sprintf("/collections/%s/posts/%s", alias, slug), &post)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := env.Data.(*Post); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+
+	if env.Code == http.StatusOK {
+		return &post, nil
+	} else if env.Code == http.StatusNotFound {
+		return nil, fmt.Errorf("Post %s not found in collection %s", slug, alias)
+	}
+
+	return nil, fmt.Errorf("Problem getting post %s from collection %s: %d. %v\n", slug, alias, env.Code, err)
+}
+
 // GetUserCollections retrieves the authenticated user's collections.
 // See https://developers.write.as/docs/api/#retrieve-user-39-s-collections
 func (c *Client) GetUserCollections() (*[]Collection, error) {
@@ -134,4 +159,28 @@ func (c *Client) GetUserCollections() (*[]Collection, error) {
 		return nil, fmt.Errorf("Problem getting collections: %d. %v\n", status, err)
 	}
 	return colls, nil
+}
+
+// DeleteCollection permanently deletes a collection and makes any posts on it
+// anonymous.
+//
+// See https://developers.write.as/docs/api/#delete-a-collection.
+func (c *Client) DeleteCollection(alias string) error {
+	endpoint := "/collections/" + alias
+	env, err := c.delete(endpoint, nil /* data */)
+	if err != nil {
+		return err
+	}
+
+	status := env.Code
+	switch status {
+	case http.StatusNoContent:
+		return nil
+	case http.StatusUnauthorized:
+		return fmt.Errorf("Not authenticated.")
+	case http.StatusBadRequest:
+		return fmt.Errorf("Bad request: %s", env.ErrorMessage)
+	default:
+		return fmt.Errorf("Problem deleting collection: %d. %s\n", status, env.ErrorMessage)
+	}
 }
