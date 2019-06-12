@@ -38,7 +38,7 @@ type (
 	// PostParams holds values for creating or updating a post.
 	PostParams struct {
 		// Parameters only for updating
-		ID    string `json:"-"`
+		ID    string `json:"id,omitempty"`
 		Token string `json:"token,omitempty"`
 
 		// Parameters for creating or updating
@@ -55,7 +55,7 @@ type (
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
 
 		// Parameters for collection posts
-		Collection string `json:"-"`
+		Collection string `json:"collection,omitempty"`
 	}
 
 	// PinnedPostParams holds values for pinning a post
