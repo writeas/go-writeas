@@ -36,7 +36,7 @@ func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 		} else if status == http.StatusNotFound {
 			return nil, fmt.Errorf("User does not exist.")
 		} else if status == http.StatusTooManyRequests {
-			return nil, fmt.Errorf("Stop repeatedly trying to log in.")
+			return nil, fmt.Errorf("Too many log in attempts in a short period of time.")
 		}
 		return nil, fmt.Errorf("Problem authenticating: %d. %v\n", status, err)
 	}
