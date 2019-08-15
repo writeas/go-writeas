@@ -1,17 +1,13 @@
 # go-writeas
 
-[![godoc](https://godoc.org/go.code.as/writeas.v2?status.svg)](https://godoc.org/go.code.as/writeas.v2)
+[![godoc](https://godoc.org/github.com/writeas/go-writeas?status.svg)](https://godoc.org/github.com/writeas/go-writeas)
 
 Official Write.as Go client library.
 
 ## Installation
 
-**Warning**: the `v2` branch is under heavy development and its API will change without notice.
-
-For a stable API, use `go.code.as/writeas.v1` and upgrade to `v2` once everything is merged into `master`.
-
 ```bash
-go get go.code.as/writeas.v2
+go get github.com/writeas/go-writeas
 ```
 
 ## Documentation
@@ -21,7 +17,7 @@ See all functionality and usages in the [API documentation](https://developers.w
 ### Example usage
 
 ```go
-import "go.code.as/writeas.v2"
+import "github.com/writeas/go-writeas"
 
 func main() {
 	// Create the client
