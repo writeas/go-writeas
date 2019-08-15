@@ -19,7 +19,7 @@ const (
 	torAPIURL = "http://writeas7pm7rcdqg.onion/api"
 
 	// Current go-writeas version
-	Version = "2-dev"
+	Version = "2"
 )
 
 // Client is used to interact with the Write.as API. It can be used to make
