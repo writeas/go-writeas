@@ -4,4 +4,4 @@
 ## Implementation
 
 
-[API documentation](https://developer.write.as/docs/api/?go#TODO-ENTER-SECTION-HERE).
+[API documentation](https://developers.write.as/docs/api/?go#TODO-ENTER-SECTION-HERE).

@@ -84,7 +84,7 @@ type (
 
 // GetPost retrieves a published post, returning the Post and any error (in
 // user-friendly form) that occurs. See
-// https://developer.write.as/docs/api/#retrieve-a-post.
+// https://developers.write.as/docs/api/#retrieve-a-post.
 func (c *Client) GetPost(id string) (*Post, error) {
 	p := &Post{}
 	env, err := c.get(fmt.Sprintf("/posts/%s", id), p)
@@ -109,7 +109,7 @@ func (c *Client) GetPost(id string) (*Post, error) {
 }
 
 // CreatePost publishes a new post, returning a user-friendly error if one comes
-// up. See https://developer.write.as/docs/api/#publish-a-post.
+// up. See https://developers.write.as/docs/api/#publish-a-post.
 func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 	p := &Post{}
 	endPre := ""
@@ -137,7 +137,7 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 }
 
 // UpdatePost updates a published post with the given PostParams. See
-// https://developer.write.as/docs/api/#update-a-post.
+// https://developers.write.as/docs/api/#update-a-post.
 func (c *Client) UpdatePost(id, token string, sp *PostParams) (*Post, error) {
 	return c.updatePost("", id, token, sp)
 }
@@ -176,7 +176,7 @@ func (c *Client) updatePost(collection, identifier, token string, sp *PostParams
 }
 
 // DeletePost permanently deletes a published post. See
-// https://developer.write.as/docs/api/#delete-a-post.
+// https://developers.write.as/docs/api/#delete-a-post.
 func (c *Client) DeletePost(id, token string) error {
 	return c.deletePost("", id, token)
 }
@@ -209,7 +209,7 @@ func (c *Client) deletePost(collection, identifier, token string) error {
 }
 
 // ClaimPosts associates anonymous posts with a user / account.
-// https://developer.write.as/docs/api/#claim-posts.
+// https://developers.write.as/docs/api/#claim-posts.
 func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	p := &[]ClaimPostResult{}
 	env, err := c.post("/posts/claim", sp, p)

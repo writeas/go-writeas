@@ -16,7 +16,7 @@ go get go.code.as/writeas.v2
 
 ## Documentation
 
-See all functionality and usages in the [API documentation](https://developer.write.as/docs/api/).
+See all functionality and usages in the [API documentation](https://developers.write.as/docs/api/).
 
 ### Example usage
 

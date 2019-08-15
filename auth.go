@@ -6,7 +6,7 @@ import (
 )
 
 // LogIn authenticates a user with Write.as.
-// See https://developer.write.as/docs/api/#authenticate-a-user
+// See https://developers.write.as/docs/api/#authenticate-a-user
 func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 	u := &AuthUser{}
 	up := struct {
