@@ -28,10 +28,10 @@ func TestGetCollectionPosts(t *testing.T) {
 		if err != nil {
 			t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 		}
-		if len(*res) == 0 {
+		if len(res) == 0 {
 			t.Error("Expected at least on post in collection")
 		}
-		posts = *res
+		posts = res
 	})
 	t.Run("Get one post from collection", func(t *testing.T) {
 		res, err := dwac.GetCollectionPost("tester", posts[0].Slug)
@@ -62,7 +62,7 @@ func TestGetUserCollections(t *testing.T) {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 	} else {
 		t.Logf("User collections: %+v", res)
-		if len(*res) == 0 {
+		if len(res) == 0 {
 			t.Errorf("No collections returned!")
 		}
 	}
