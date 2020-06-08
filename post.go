@@ -17,6 +17,7 @@ type (
 		Language  *string   `json:"language"`
 		RTL       *bool     `json:"rtl"`
 		Listed    bool      `json:"listed"`
+		Type      PostType  `json:"type"`
 		Created   time.Time `json:"created"`
 		Updated   time.Time `json:"updated"`
 		Title     string    `json:"title"`
@@ -80,6 +81,16 @@ type (
 		ErrorMessage string `json:"error_msg,omitempty"`
 		Post         *Post  `json:"post,omitempty"`
 	}
+)
+
+type PostType string
+
+const (
+	TypePost            PostType = "post"
+	TypePrompt                   = "prompt"
+	TypePromptArchive            = "prompt-arch"
+	TypeSubmission               = "submission"
+	TypeSubmissionDraft          = "submission-draft"
 )
 
 // GetPost retrieves a published post, returning the Post and any error (in
