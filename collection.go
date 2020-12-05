@@ -21,7 +21,7 @@ type (
 
 		TotalPosts int `json:"total_posts"`
 
-		Posts *[]Post `json:"posts,omitempty"`
+		Posts []Post `json:"posts,omitempty"`
 	}
 
 	// CollectionParams holds values for creating a collection.
@@ -91,7 +91,7 @@ func (c *Client) GetCollection(alias string) (*Collection, error) {
 // GetCollectionPosts retrieves a collection's posts, returning the Posts
 // and any error (in user-friendly form) that occurs. See
 // https://developers.write.as/docs/api/#retrieve-collection-posts
-func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
+func (c *Client) GetCollectionPosts(alias string) ([]Post, error) {
 	coll := &Collection{}
 	env, err := c.get(fmt.Sprintf("/collections/%s/posts", alias), coll)
 	if err != nil {
@@ -139,17 +139,19 @@ func (c *Client) GetCollectionPost(alias, slug string) (*Post, error) {
 
 // GetUserCollections retrieves the authenticated user's collections.
 // See https://developers.write.as/docs/api/#retrieve-user-39-s-collections
-func (c *Client) GetUserCollections() (*[]Collection, error) {
-	colls := &[]Collection{}
-	env, err := c.get("/me/collections", colls)
+func (c *Client) GetUserCollections() ([]Collection, error) {
+	colls := []Collection{}
+	env, err := c.get("/me/collections", &colls)
 	if err != nil {
 		return nil, err
 	}
 
 	var ok bool
-	if colls, ok = env.Data.(*[]Collection); !ok {
-		return nil, fmt.Errorf("Wrong data returned from API.")
+	collsNew, ok := env.Data.(*[]Collection)
+	if !ok {
+		return nil, fmt.Errorf("Wrong data returned from API. '%+v'", env)
 	}
+	colls = *collsNew
 	status := env.Code
 
 	if status != http.StatusOK {
