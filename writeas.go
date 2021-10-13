@@ -108,6 +108,11 @@ func (c *Client) Token() string {
 	return c.token
 }
 
+// BaseURL returns the base API URL the Client will make calls against.
+func (c *Client) BaseURL() string {
+	return c.baseURL
+}
+
 func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
 	method := "GET"
 	if method != "GET" && method != "HEAD" {
