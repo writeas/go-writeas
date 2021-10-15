@@ -29,6 +29,8 @@ type Client struct {
 
 	// Access token for the user making requests.
 	token string
+	// Application-level API key.
+	apiKey string
 	// Client making requests to the API
 	client *http.Client
 
@@ -101,6 +103,11 @@ func NewClientWith(c Config) *Client {
 // an empty string will change back to unauthenticated requests.
 func (c *Client) SetToken(token string) {
 	c.token = token
+}
+
+// SetApplicationKey sets an application-level API key for all Client requests.
+func (c *Client) SetApplicationKey(key string) {
+	c.apiKey = key
 }
 
 // Token returns the user token currently set to the Client.
@@ -200,5 +207,8 @@ func (c *Client) prepareRequest(r *http.Request) {
 	r.Header.Add("Content-Type", "application/json")
 	if c.token != "" {
 		r.Header.Add("Authorization", "Token "+c.token)
+	}
+	if c.apiKey != "" {
+		r.Header.Add("X-API-Key", c.apiKey)
 	}
 }
