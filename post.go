@@ -52,6 +52,8 @@ type (
 		IsRTL    *bool      `json:"rtl,omitempty"`
 		Language *string    `json:"lang,omitempty"`
 
+		AuthorSlug *string `json:"author"`
+
 		// Parameters only for creating
 		Crosspost []map[string]string `json:"crosspost,omitempty"`
 
