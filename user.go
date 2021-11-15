@@ -1,6 +1,9 @@
 package writeas
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type (
 	// AuthUser represents a just-authenticated user. It contains information
@@ -32,3 +35,28 @@ type (
 		Delinquent bool      `json:"is_delinquent"`
 	}
 )
+
+// GetMe retrieves the authenticated User's information.
+// See: https://developers.write.as/docs/api/#retrieve-authenticated-user
+func (c *Client) GetMe(verbose bool) (*User, error) {
+	if c.Token() == "" {
+		return nil, fmt.Errorf("Unable to get user; no access token given.")
+	}
+
+	params := ""
+	if verbose {
+		params = "?verbose=true"
+	}
+	env, err := c.get("/me"+params, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var u *User
+	var ok bool
+	if u, ok = env.Data.(*User); !ok {
+		return nil, fmt.Errorf("Wrong data returned from API.")
+	}
+
+	return u, nil
+}
