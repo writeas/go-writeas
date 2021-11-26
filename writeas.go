@@ -110,6 +110,11 @@ func (c *Client) SetApplicationKey(key string) {
 	c.apiKey = key
 }
 
+// SetClient sets a custom http.Client to use instead of the default.
+func (c *Client) SetClient(cl *http.Client) {
+	c.client = cl
+}
+
 // Token returns the user token currently set to the Client.
 func (c *Client) Token() string {
 	return c.token
