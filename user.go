@@ -2,6 +2,7 @@ package writeas
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -50,6 +51,11 @@ func (c *Client) GetMe(verbose bool) (*User, error) {
 	env, err := c.get("/me"+params, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	status := env.Code
+	if status == http.StatusUnauthorized {
+		return nil, fmt.Errorf("invalid or expired token")
 	}
 
 	var u *User
