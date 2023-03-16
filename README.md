@@ -7,7 +7,7 @@ Official Write.as Go client library.
 ## Installation
 
 ```bash
-go get github.com/writeas/go-writeas
+go get github.com/writeas/go-writeas/v2
 ```
 
 ## Documentation
@@ -17,7 +17,7 @@ See all functionality and usages in the [API documentation](https://developers.w
 ### Example usage
 
 ```go
-import "github.com/writeas/go-writeas"
+import "github.com/writeas/go-writeas/v2"
 
 func main() {
 	// Create the client
