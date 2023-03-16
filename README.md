@@ -1,6 +1,6 @@
 # go-writeas
 
-[![godoc](https://godoc.org/github.com/writeas/go-writeas?status.svg)](https://godoc.org/github.com/writeas/go-writeas)
+[![godoc](https://godoc.org/github.com/writeas/go-writeas?status.svg)](https://pkg.go.dev/github.com/writeas/go-writeas/v2)
 
 Official Write.as Go client library.
 
