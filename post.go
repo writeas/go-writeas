@@ -224,17 +224,19 @@ func (c *Client) deletePost(collection, identifier, token string) error {
 
 // ClaimPosts associates anonymous posts with a user / account.
 // https://developers.write.as/docs/api/#claim-posts.
-func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
-	p := &[]ClaimPostResult{}
-	env, err := c.post("/posts/claim", sp, p)
+func (c *Client) ClaimPosts(sp []OwnedPostParams) ([]ClaimPostResult, error) {
+	p := []ClaimPostResult{}
+	env, err := c.post("/posts/claim", sp, &p)
 	if err != nil {
 		return nil, err
 	}
 
 	var ok bool
-	if p, ok = env.Data.(*[]ClaimPostResult); !ok {
+	newP, ok := env.Data.(*[]ClaimPostResult)
+	if !ok {
 		return nil, fmt.Errorf("Wrong data returned from API.")
 	}
+	p = *newP
 
 	status := env.Code
 	if status == http.StatusOK {
@@ -251,17 +253,19 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 
 // GetUserPosts retrieves the authenticated user's posts.
 // See https://developers.write.as/docs/api/#retrieve-user-39-s-posts
-func (c *Client) GetUserPosts() (*[]Post, error) {
-	p := &[]Post{}
-	env, err := c.get("/me/posts", p)
+func (c *Client) GetUserPosts() ([]Post, error) {
+	p := []Post{}
+	env, err := c.get("/me/posts", &p)
 	if err != nil {
 		return nil, err
 	}
 
 	var ok bool
-	if p, ok = env.Data.(*[]Post); !ok {
+	newP, ok := env.Data.(*[]Post)
+	if !ok {
 		return nil, fmt.Errorf("Wrong data returned from API.")
 	}
+	p = *newP
 	status := env.Code
 
 	if status != http.StatusOK {
