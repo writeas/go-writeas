@@ -16,7 +16,7 @@ import (
 const (
 	apiURL    = "https://write.as/api"
 	devAPIURL = "https://development.write.as/api"
-	torAPIURL = "http://writeas7pm7rcdqg.onion/api"
+	torAPIURL = "http://writeasw4b635r4o3vec6mu45s47ohfyro5vayzx2zjwod4pjswyovyd.onion/api"
 
 	// Current go-writeas version
 	Version = "2"
