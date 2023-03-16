@@ -91,9 +91,13 @@ func (c *Client) GetCollection(alias string) (*Collection, error) {
 // GetCollectionPosts retrieves a collection's posts, returning the Posts
 // and any error (in user-friendly form) that occurs. See
 // https://developers.write.as/docs/api/#retrieve-collection-posts
-func (c *Client) GetCollectionPosts(alias string) (*[]Post, error) {
+func (c *Client) GetCollectionPosts(alias string, page int) (*[]Post, error) {
 	coll := &Collection{}
-	env, err := c.get(fmt.Sprintf("/collections/%s/posts", alias), coll)
+	q := ""
+	if page > 0 {
+		q = fmt.Sprintf("?page=%d", page)
+	}
+	env, err := c.get(fmt.Sprintf("/collections/%s/posts%s", alias, q), coll)
 	if err != nil {
 		return nil, err
 	}
