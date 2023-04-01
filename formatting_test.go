@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestMarkdown(t *testing.T) {
 	out := `<p>This is <em>formatted</em> in <strong>Markdown</strong>.</p>
 `
 
-	res, err := dwac.Markdown(in, "")
+	res, err := dwac.Markdown(context.Background(), in, "")
 	if err != nil {
 		t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 	}

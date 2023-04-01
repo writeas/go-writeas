@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"testing"
 )
@@ -8,8 +9,9 @@ import (
 func TestPostRoundTrip(t *testing.T) {
 	var id, token string
 	dwac := NewClient()
+	ctx := context.Background()
 	t.Run("Create post", func(t *testing.T) {
-		p, err := dwac.CreatePost(&PostParams{
+		p, err := dwac.CreatePost(ctx, &PostParams{
 			Title:   "Title!",
 			Content: "This is a post.",
 			Font:    "sans",
@@ -22,7 +24,7 @@ func TestPostRoundTrip(t *testing.T) {
 		id, token = p.ID, p.Token
 	})
 	t.Run("Get post", func(t *testing.T) {
-		res, err := dwac.GetPost(id)
+		res, err := dwac.GetPost(ctx, id)
 		if err != nil {
 			t.Errorf("Unexpected fetch results: %+v, err: %v\n", res, err)
 		} else {
@@ -33,7 +35,7 @@ func TestPostRoundTrip(t *testing.T) {
 		}
 	})
 	t.Run("Update post", func(t *testing.T) {
-		p, err := dwac.UpdatePost(id, token, &PostParams{
+		p, err := dwac.UpdatePost(ctx, id, token, &PostParams{
 			Content: "Now it's been updated!",
 		})
 		if err != nil {
@@ -43,7 +45,7 @@ func TestPostRoundTrip(t *testing.T) {
 		t.Logf("Post updated: %+v", p)
 	})
 	t.Run("Delete post", func(t *testing.T) {
-		err := dwac.DeletePost(id, token)
+		err := dwac.DeletePost(ctx, id, token)
 		if err != nil {
 			t.Errorf("Post delete failed: %v", err)
 			return
@@ -54,20 +56,21 @@ func TestPostRoundTrip(t *testing.T) {
 
 func TestPinUnPin(t *testing.T) {
 	dwac := NewDevClient()
-	_, err := dwac.LogIn("demo", "demo")
+	ctx := context.Background()
+	_, err := dwac.LogIn(ctx, "demo", "demo")
 	if err != nil {
 		t.Fatalf("Unable to log in: %v", err)
 	}
-	defer dwac.LogOut()
+	defer dwac.LogOut(ctx)
 
 	t.Run("Pin post", func(t *testing.T) {
-		err := dwac.PinPost("tester", &PinnedPostParams{ID: "olx6uk7064heqltf"})
+		err := dwac.PinPost(ctx, "tester", &PinnedPostParams{ID: "olx6uk7064heqltf"})
 		if err != nil {
 			t.Fatalf("Pin failed: %v", err)
 		}
 	})
 	t.Run("Unpin post", func(t *testing.T) {
-		err := dwac.UnpinPost("tester", &PinnedPostParams{ID: "olx6uk7064heqltf"})
+		err := dwac.UnpinPost(ctx, "tester", &PinnedPostParams{ID: "olx6uk7064heqltf"})
 		if err != nil {
 			t.Fatalf("Unpin failed: %v", err)
 		}
@@ -78,7 +81,7 @@ func ExampleClient_CreatePost() {
 	dwac := NewDevClient()
 
 	// Publish a post
-	p, err := dwac.CreatePost(&PostParams{
+	p, err := dwac.CreatePost(context.Background(), &PostParams{
 		Title:   "Title!",
 		Content: "This is a post.",
 		Font:    "sans",

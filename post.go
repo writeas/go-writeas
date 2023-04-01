@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -99,9 +100,9 @@ const (
 // GetPost retrieves a published post, returning the Post and any error (in
 // user-friendly form) that occurs. See
 // https://developers.write.as/docs/api/#retrieve-a-post.
-func (c *Client) GetPost(id string) (*Post, error) {
+func (c *Client) GetPost(ctx context.Context, id string) (*Post, error) {
 	p := &Post{}
-	env, err := c.get(fmt.Sprintf("/posts/%s", id), p)
+	env, err := c.get(ctx, fmt.Sprintf("/posts/%s", id), p)
 	if err != nil {
 		return nil, err
 	}
@@ -124,13 +125,13 @@ func (c *Client) GetPost(id string) (*Post, error) {
 
 // CreatePost publishes a new post, returning a user-friendly error if one comes
 // up. See https://developers.write.as/docs/api/#publish-a-post.
-func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
+func (c *Client) CreatePost(ctx context.Context, sp *PostParams) (*Post, error) {
 	p := &Post{}
 	endPre := ""
 	if sp.Collection != "" {
 		endPre = "/collections/" + sp.Collection
 	}
-	env, err := c.post(endPre+"/posts", sp, p)
+	env, err := c.post(ctx, endPre+"/posts", sp, p)
 	if err != nil {
 		return nil, err
 	}
@@ -152,11 +153,11 @@ func (c *Client) CreatePost(sp *PostParams) (*Post, error) {
 
 // UpdatePost updates a published post with the given PostParams. See
 // https://developers.write.as/docs/api/#update-a-post.
-func (c *Client) UpdatePost(id, token string, sp *PostParams) (*Post, error) {
-	return c.updatePost("", id, token, sp)
+func (c *Client) UpdatePost(ctx context.Context, id, token string, sp *PostParams) (*Post, error) {
+	return c.updatePost(ctx, "", id, token, sp)
 }
 
-func (c *Client) updatePost(collection, identifier, token string, sp *PostParams) (*Post, error) {
+func (c *Client) updatePost(ctx context.Context, collection, identifier, token string, sp *PostParams) (*Post, error) {
 	p := &Post{}
 	endpoint := "/posts/" + identifier
 	/*
@@ -167,7 +168,7 @@ func (c *Client) updatePost(collection, identifier, token string, sp *PostParams
 		}
 	*/
 	sp.Token = token
-	env, err := c.put(endpoint, sp, p)
+	env, err := c.put(ctx, endpoint, sp, p)
 	if err != nil {
 		return nil, err
 	}
@@ -191,11 +192,11 @@ func (c *Client) updatePost(collection, identifier, token string, sp *PostParams
 
 // DeletePost permanently deletes a published post. See
 // https://developers.write.as/docs/api/#delete-a-post.
-func (c *Client) DeletePost(id, token string) error {
-	return c.deletePost("", id, token)
+func (c *Client) DeletePost(ctx context.Context, id, token string) error {
+	return c.deletePost(ctx, "", id, token)
 }
 
-func (c *Client) deletePost(collection, identifier, token string) error {
+func (c *Client) deletePost(ctx context.Context, collection, identifier, token string) error {
 	p := map[string]string{}
 	endpoint := "/posts/" + identifier
 	/*
@@ -206,7 +207,7 @@ func (c *Client) deletePost(collection, identifier, token string) error {
 		}
 	*/
 	p["token"] = token
-	env, err := c.delete(endpoint, p)
+	env, err := c.delete(ctx, endpoint, p)
 	if err != nil {
 		return err
 	}
@@ -224,9 +225,9 @@ func (c *Client) deletePost(collection, identifier, token string) error {
 
 // ClaimPosts associates anonymous posts with a user / account.
 // https://developers.write.as/docs/api/#claim-posts.
-func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
+func (c *Client) ClaimPosts(ctx context.Context, sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 	p := &[]ClaimPostResult{}
-	env, err := c.post("/posts/claim", sp, p)
+	env, err := c.post(ctx, "/posts/claim", sp, p)
 	if err != nil {
 		return nil, err
 	}
@@ -251,9 +252,9 @@ func (c *Client) ClaimPosts(sp *[]OwnedPostParams) (*[]ClaimPostResult, error) {
 
 // GetUserPosts retrieves the authenticated user's posts.
 // See https://developers.write.as/docs/api/#retrieve-user-39-s-posts
-func (c *Client) GetUserPosts() (*[]Post, error) {
+func (c *Client) GetUserPosts(ctx context.Context) (*[]Post, error) {
 	p := &[]Post{}
-	env, err := c.get("/me/posts", p)
+	env, err := c.get(ctx, "/me/posts", p)
 	if err != nil {
 		return nil, err
 	}
@@ -275,9 +276,9 @@ func (c *Client) GetUserPosts() (*[]Post, error) {
 
 // PinPost pins a post in the given collection.
 // See https://developers.write.as/docs/api/#pin-a-post-to-a-collection
-func (c *Client) PinPost(alias string, pp *PinnedPostParams) error {
+func (c *Client) PinPost(ctx context.Context, alias string, pp *PinnedPostParams) error {
 	res := &[]BatchPostResult{}
-	env, err := c.post(fmt.Sprintf("/collections/%s/pin", alias), []*PinnedPostParams{pp}, res)
+	env, err := c.post(ctx, fmt.Sprintf("/collections/%s/pin", alias), []*PinnedPostParams{pp}, res)
 	if err != nil {
 		return err
 	}
@@ -310,9 +311,9 @@ func (c *Client) PinPost(alias string, pp *PinnedPostParams) error {
 
 // UnpinPost unpins a post from the given collection.
 // See https://developers.write.as/docs/api/#unpin-a-post-from-a-collection
-func (c *Client) UnpinPost(alias string, pp *PinnedPostParams) error {
+func (c *Client) UnpinPost(ctx context.Context, alias string, pp *PinnedPostParams) error {
 	res := &[]BatchPostResult{}
-	env, err := c.post(fmt.Sprintf("/collections/%s/unpin", alias), []*PinnedPostParams{pp}, res)
+	env, err := c.post(ctx, fmt.Sprintf("/collections/%s/unpin", alias), []*PinnedPostParams{pp}, res)
 	if err != nil {
 		return err
 	}

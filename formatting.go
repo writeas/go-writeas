@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -11,7 +12,7 @@ type BodyResponse struct {
 
 // Markdown takes raw Markdown and renders it into usable HTML. See
 // https://developers.write.as/docs/api/#render-markdown.
-func (c *Client) Markdown(body, collectionURL string) (string, error) {
+func (c *Client) Markdown(ctx context.Context, body, collectionURL string) (string, error) {
 	p := &BodyResponse{}
 	data := struct {
 		RawBody       string `json:"raw_body"`
@@ -21,7 +22,7 @@ func (c *Client) Markdown(body, collectionURL string) (string, error) {
 		CollectionURL: collectionURL,
 	}
 
-	env, err := c.post("/markdown", data, p)
+	env, err := c.post(ctx, "/markdown", data, p)
 	if err != nil {
 		return "", err
 	}
