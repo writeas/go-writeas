@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -39,7 +40,7 @@ type (
 
 // GetMe retrieves the authenticated User's information.
 // See: https://developers.write.as/docs/api/#retrieve-authenticated-user
-func (c *Client) GetMe(verbose bool) (*User, error) {
+func (c *Client) GetMe(ctx context.Context, verbose bool) (*User, error) {
 	if c.Token() == "" {
 		return nil, fmt.Errorf("Unable to get user; no access token given.")
 	}
@@ -48,7 +49,7 @@ func (c *Client) GetMe(verbose bool) (*User, error) {
 	if verbose {
 		params = "?verbose=true"
 	}
-	env, err := c.get("/me"+params, nil)
+	env, err := c.get(ctx, "/me"+params, nil)
 	if err != nil {
 		return nil, err
 	}

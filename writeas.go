@@ -3,6 +3,7 @@ package writeas
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -44,8 +45,8 @@ const defaultHTTPTimeout = 10 * time.Second
 // NewClient creates a new API client. By default, all requests are made
 // unauthenticated. To optionally make authenticated requests, call `SetToken`.
 //
-//     c := writeas.NewClient()
-//     c.SetToken("00000000-0000-0000-0000-000000000000")
+//	c := writeas.NewClient()
+//	c.SetToken("00000000-0000-0000-0000-000000000000")
 func NewClient() *Client {
 	return NewClientWith(Config{URL: apiURL})
 }
@@ -125,29 +126,29 @@ func (c *Client) BaseURL() string {
 	return c.baseURL
 }
 
-func (c *Client) get(path string, r interface{}) (*impart.Envelope, error) {
+func (c *Client) get(ctx context.Context, path string, r interface{}) (*impart.Envelope, error) {
 	method := "GET"
 	if method != "GET" && method != "HEAD" {
 		return nil, fmt.Errorf("Method %s not currently supported by library (only HEAD and GET).\n", method)
 	}
 
-	return c.request(method, path, nil, r)
+	return c.request(ctx, method, path, nil, r)
 }
 
-func (c *Client) post(path string, data, r interface{}) (*impart.Envelope, error) {
+func (c *Client) post(ctx context.Context, path string, data, r interface{}) (*impart.Envelope, error) {
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(data)
-	return c.request("POST", path, b, r)
+	return c.request(ctx, "POST", path, b, r)
 }
 
-func (c *Client) put(path string, data, r interface{}) (*impart.Envelope, error) {
+func (c *Client) put(ctx context.Context, path string, data, r interface{}) (*impart.Envelope, error) {
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(data)
-	return c.request("PUT", path, b, r)
+	return c.request(ctx, "PUT", path, b, r)
 }
 
-func (c *Client) delete(path string, data map[string]string) (*impart.Envelope, error) {
-	r, err := c.buildRequest("DELETE", path, nil)
+func (c *Client) delete(ctx context.Context, path string, data map[string]string) (*impart.Envelope, error) {
+	r, err := c.buildRequest(ctx, "DELETE", path, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -161,8 +162,8 @@ func (c *Client) delete(path string, data map[string]string) (*impart.Envelope, 
 	return c.doRequest(r, nil)
 }
 
-func (c *Client) request(method, path string, data io.Reader, result interface{}) (*impart.Envelope, error) {
-	r, err := c.buildRequest(method, path, data)
+func (c *Client) request(ctx context.Context, method, path string, data io.Reader, result interface{}) (*impart.Envelope, error) {
+	r, err := c.buildRequest(ctx, method, path, data)
 	if err != nil {
 		return nil, err
 	}
@@ -170,9 +171,9 @@ func (c *Client) request(method, path string, data io.Reader, result interface{}
 	return c.doRequest(r, result)
 }
 
-func (c *Client) buildRequest(method, path string, data io.Reader) (*http.Request, error) {
+func (c *Client) buildRequest(ctx context.Context, method, path string, data io.Reader) (*http.Request, error) {
 	url := fmt.Sprintf("%s%s", c.baseURL, path)
-	r, err := http.NewRequest(method, url, data)
+	r, err := http.NewRequestWithContext(ctx, method, url, data)
 	if err != nil {
 		return nil, fmt.Errorf("Create request: %v", err)
 	}

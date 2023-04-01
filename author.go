@@ -1,6 +1,7 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -27,13 +28,13 @@ type (
 )
 
 // CreateContributor creates a new contributor on the given organization.
-func (c *Client) CreateContributor(sp *AuthorParams) (*Author, error) {
+func (c *Client) CreateContributor(ctx context.Context, sp *AuthorParams) (*Author, error) {
 	if sp.OrgAlias == "" {
 		return nil, fmt.Errorf("AuthorParams.OrgAlias is required.")
 	}
 
 	a := &Author{}
-	env, err := c.post("/organizations/"+sp.OrgAlias+"/contributors", sp, a)
+	env, err := c.post(ctx, "/organizations/"+sp.OrgAlias+"/contributors", sp, a)
 	if err != nil {
 		return nil, err
 	}

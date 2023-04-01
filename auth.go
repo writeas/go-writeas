@@ -1,13 +1,14 @@
 package writeas
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
 
 // LogIn authenticates a user with Write.as.
 // See https://developers.write.as/docs/api/#authenticate-a-user
-func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
+func (c *Client) LogIn(ctx context.Context, username, pass string) (*AuthUser, error) {
 	u := &AuthUser{}
 	up := struct {
 		Alias string `json:"alias"`
@@ -17,7 +18,7 @@ func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 		Pass:  pass,
 	}
 
-	env, err := c.post("/auth/login", up, u)
+	env, err := c.post(ctx, "/auth/login", up, u)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +48,8 @@ func (c *Client) LogIn(username, pass string) (*AuthUser, error) {
 
 // LogOut logs the current user out, making the Client's current access token
 // invalid.
-func (c *Client) LogOut() error {
-	env, err := c.delete("/auth/me", nil)
+func (c *Client) LogOut(ctx context.Context) error {
+	env, err := c.delete(ctx, "/auth/me", nil)
 	if err != nil {
 		return err
 	}

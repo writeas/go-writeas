@@ -1,10 +1,14 @@
 package writeas
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestClient_CreateContributor(t *testing.T) {
 	c := NewClientWith(Config{URL: "http://localhost:7777/api"})
-	_, err := c.LogIn("test", "test")
+	ctx := context.Background()
+	_, err := c.LogIn(ctx, "test", "test")
 	if err != nil {
 		t.Fatalf("login: %s", err)
 	}
@@ -24,7 +28,7 @@ func TestClient_CreateContributor(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			_, err = c.CreateContributor(&AuthorParams{
+			_, err = c.CreateContributor(ctx, &AuthorParams{
 				Name:     test.AName,
 				Slug:     test.ASlug,
 				OrgAlias: test.AOrg,
