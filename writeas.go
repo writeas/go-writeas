@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"code.as/core/socks"
 	"github.com/writeas/impart"
+	"h12.io/socks"
 )
 
 const (
